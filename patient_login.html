@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="center">
+    <h1> Patient Login</h1>
+    <form method="post" onsubmit="readPatientData(event)" id="patientlogin">
+      <div class="txt_field">
+        <input type="text" id="username" required>
+        <span></span>
+        <label>Username</label>
+      </div>
+      <div class="txt_field">
+        <input type="password" id="password" required>
+        <span></span>
+        <label>Password</label>
+      </div>
+      <button type="submit">Submit</button>
+      <div class="signup_link">
+        Not a member? <a href="./patient_signup.html">Signup</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+  <script>
+    function readPatientData(event) {
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+        authDomain: "fir-f078c.firebaseapp.com",
+        databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+        projectId: "fir-f078c-default-rtdb",
+        storageBucket: "fir-f078c.appspot.com",
+        messagingSenderId: "693025710131",
+        appId: "1:693025710131:web:22157824556b41fe5b0346"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      event.preventDefault();
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+      document.getElementById('patientlogin').reset()
+
+      firebase.database().ref().child("patients").get().then((snapshot) => {
+        if (snapshot.exists()) {
+          let isCorrect = false
+          for (let temp in snapshot.val()) {
+            if (snapshot.val()[temp]['patient_id'] === username && snapshot.val()[temp]['password'] === password) {
+              isCorrect = true;
+              localStorage.setItem("pid", temp)
+              if (confirm("Patient logged in successfully"))
+                window.location.href = "./medicine_list.html";
+              else
+                window.location.href = "./medicine_list.html";
+              break;
+            }
+          }
+          if (!isCorrect)
+            alert("username/password incorrect")
+
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+
+  </script>

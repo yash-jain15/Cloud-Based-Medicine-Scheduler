@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Add Medicine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="center">
+        <h1>Add Medicine</h1>
+        <form onsubmit="addMedicine(event)" method="post" id="docsignup">
+
+            <div class="txt_field">
+                <input type="text" id="med" required>
+                <span></span>
+                <label>Medicine</label>
+            </div>
+            <div class="txt_field">
+                <input type="number" id="repeat" required>
+                <span></span>
+                <label>Repeat</label>
+            </div>
+            <div class="txt_field">
+                <input type="time" id="time1" required>
+                <span></span>
+                <label>Time 1</label>
+            </div>
+            <div class="txt_field">
+                <input type="time" id="time2" required>
+                <span></span>
+                <label>Time 2</label>
+            </div>
+
+
+            <button type="submit">Submit</button>
+
+        </form>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+    <script>
+        function addMedicine(event) {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+                authDomain: "fir-f078c.firebaseapp.com",
+                databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+                projectId: "fir-f078c-default-rtdb",
+                storageBucket: "fir-f078c.appspot.com",
+                messagingSenderId: "693025710131",
+                appId: "1:693025710131:web:22157824556b41fe5b0346"
+            };
+            firebase.initializeApp(firebaseConfig);
+
+            event.preventDefault()
+            var pid = localStorage.getItem("pid")
+            var medicine = document.getElementById("med").value;
+            var repeat = document.getElementById("repeat").value;
+            var time1 = document.getElementById("time1").value;
+            var time2 = document.getElementById("time2").value;
+
+            firebase.database().ref().child('patients/' + pid + "/medicine").get().then((snapshot) => {
+                let total = 0
+                if (snapshot.exists()) {
+                    total = Object.keys(snapshot.val()).length
+                } else {
+                    console.log("No data available");
+                }
+                total += 1
+                localStorage.removeItem("pid")
+                firebase.database().ref('patients/' + pid + "/medicine/med" + total).set({
+                    medicine:medicine,
+                    repeat:repeat,
+                    time1:time1,
+                    time2:time2
+                }).then(confirm("Medicine added successfully") == true ? window.location.href = "./doc_dashboard.html" : window.location.href = "./doc_dashboard.html");
+            }
+
+            ).catch((error) => {
+                console.error(error);
+            });
+
+            document.getElementById("docsignup").reset()
+        }
+    </script>
+</body>
+
+</html>

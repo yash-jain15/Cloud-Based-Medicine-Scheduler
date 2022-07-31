@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="center">
+    <h1>Login</h1>
+    <form onsubmit="test(event)" action="" id="login">
+      <div class="txt_field">
+        <input type="text" id="username" required>
+        <span></span>
+        <label>Username</label>
+      </div>
+      <div class="txt_field">
+        <input type="password" id="password" required>
+        <span></span>
+        <label>Password</label>
+      </div>
+        <button type="submit">Submit</button>
+        <div class="signup_link">
+          Not a member? <a href="./signup.html">Signup</a>
+        </div>
+
+
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+      authDomain: "fir-f078c.firebaseapp.com",
+      databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+      projectId: "fir-f078c",
+      storageBucket: "fir-f078c.appspot.com",
+      messagingSenderId: "693025710131",
+      appId: "1:693025710131:web:22157824556b41fe5b0346"
+    };
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const db = firebaseApp.firestore();
+    const auth = firebaseApp.auth();
+  </script>
+
+  <script>
+    function test(event) {
+      event.preventDefault()
+
+      var db = firebase.firestore();
+
+      // var user = document.getElementById("username").value;
+      // var pswd = document.getElementById("password").value;
+
+      // db.collection("1").doc("test").set({
+      //   username: user,
+      //   password: pswd
+      // })
+      //   .then(function () {
+      //     console.log("Doc successful");
+      //   })
+      //   .catch(function (error) {
+      //     console.error("Error writing doc", error);
+      //   });
+
+      var docRef = db.collection("1").doc("test");
+
+
+      var user = document.getElementById("username").value;
+      var pswd = document.getElementById("password").value;
+      console.log(user, pswd)
+
+      docRef.get().then((doc) => {
+        if (doc.exists) {
+          if (doc.data().username == user && doc.data().password == pswd)
+            window.location.href = "./dashboard.html";
+          else
+            alert("Wrong username or password.")
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+
+      document.getElementById("login").reset()
+
+    }
+
+  </script>
+  <!-- <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+      authDomain: "fir-f078c.firebaseapp.com",
+      databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+      projectId: "fir-f078c",
+      storageBucket: "fir-f078c.appspot.com",
+      messagingSenderId: "693025710131",
+      appId: "1:693025710131:web:22157824556b41fe5b0346"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script> -->
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+*{
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg,#2ca3fa, #c9bbaa);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 8vh;
+    background-color: #034c81   ;
+    font-family: "Montserrat" , sans-serif;
+}
+
+.nav-links{
+    display: flex;
+    justify-content: space-around;
+    width: 30%;
+}
+.nav-links li{
+    list-style: none;
+    color: white;
+    font-size: 20px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    padding: 14px 16px;
+}
+
+.headings{
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 30px;
+    margin-left: 100px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.btn-group{
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  margin: 300px auto 0;
+}
+.btn-group button {
+    display: block;
+    font-size: 30px;
+    border-radius: 10px;
+    background-color: #034c81; /* Green background */
+    border: 1px solid #034c81; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+  }
+  
+  /* Add a background color on hover */
+  .btn-group button:hover {
+    background-color: #c9bbaa;
+  }
+

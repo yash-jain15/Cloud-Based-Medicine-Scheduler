@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Register Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="center">
+    <h1>Register Form</h1>
+    <form onsubmit="writePatientData(event)" method="post" id="patsignup">
+      <div class="txt_field">
+        <input type="text" id="pid" required>
+        <span></span>
+        <label>Patient Id</label>
+      </div>
+      <div class="txt_field">
+        <input type="text" id="fname" required>
+        <span></span>
+        <label>Full Name</label>
+      </div>
+      <div class="txt_field">
+        <input type="number" id="age" required>
+        <span></span>
+        <label>Age</label>
+      </div>
+      <div class="txt_field">
+        <input type="date" id="date" required>
+        <span></span>
+        <label>Date</label>
+      </div>
+      <div class="txt_field">
+        <input type="text" id="disease" required>
+        <span></span>
+        <label>Disease</label>
+      </div>
+      <div class="txt_field">
+        <input type="text" id="doctor" required>
+        <span></span>
+        <label>Doctor</label>
+      </div>
+      <div class="txt_field">
+        <input type="text" id="gender" required>
+        <span></span>
+        <label>Gender</label>
+      </div>
+      <div class="txt_field">
+        <input type="number" id="insurance" required>
+        <span></span>
+        <label>Health Insurance</label>
+      </div>
+
+
+      <button type="submit">Submit</button>
+
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+  <script>
+    function writePatientData(event) {
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+        authDomain: "fir-f078c.firebaseapp.com",
+        databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+        projectId: "fir-f078c-default-rtdb",
+        storageBucket: "fir-f078c.appspot.com",
+        messagingSenderId: "693025710131",
+        appId: "1:693025710131:web:22157824556b41fe5b0346"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      event.preventDefault()
+      var pid = document.getElementById("pid").value;
+      var fname = document.getElementById("fname").value;
+      var age = document.getElementById("age").value;
+      var date = document.getElementById("date").value;
+      var disease = document.getElementById("disease").value;
+      var doctor = document.getElementById("doctor").value;
+      var gender = document.getElementById("gender").value;
+      var insurance = document.getElementById("insurance").value;
+
+      firebase.database().ref().child("patients").get().then((snapshot) => {
+        let total = 0
+        if (snapshot.exists()) {
+          total = Object.keys(snapshot.val()).length
+        } else {
+          console.log("No data available");
+        }
+        total += 1
+        firebase.database().ref('patients/pid' + total).set({
+          patient_id: pid,
+          first_name: fname,
+          age: age,
+          date: date,
+          disease: disease,
+          doctor: doctor,
+          gender: gender,
+          health_insurance: insurance
+        }).then(confirm("Patient registered successfully") == true ? window.location.href = "./patient_login.html" : window.location.href = "./patient_login.html");
+
+      }
+
+      ).catch((error) => {
+        console.error(error);
+      });
+
+      document.getElementById("patsignup").reset()
+    }
+  </script>

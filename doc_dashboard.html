@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Doctor's Dashboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="style1.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<nav>
+		<div class="headings">
+			<h4>Nofi</h4>
+		</div>
+		<ul class="nav-links">
+			<li><a href="#"><i class="fa fa-fw fa-user"></i><span id="doctorname"></span></a></li>
+			<a href="dashboard.html">
+				<li style="color: red; cursor: pointer;">Logout</li>
+			</a>
+		</ul>
+	</nav>
+	<div class="header">
+		<h2>Patient's List</h2>
+	</div>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th> No: </th>
+				<th> Name: </th>
+				<th> Gender: </th>
+				<th> E-Mail: </th>
+				<th> Age: </th>
+				<th> Disease: </th>
+				<th> Add Medicine: </th>
+			</tr>
+		</thead>
+		<tbody id="patientbody">
+		</tbody>
+	</table>
+
+	<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+	<script>
+
+		document.getElementById('doctorname').innerHTML = localStorage.getItem("doctor")
+
+		const addDisease = (e, patient) => {
+			e.preventDefault()
+			localStorage.setItem("pid", patient)
+			window.location.href = "./add_medicine.html";
+		}
+
+		let patients = []
+		const firebaseConfig = {
+			apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+			authDomain: "fir-f078c.firebaseapp.com",
+			databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+			projectId: "fir-f078c-default-rtdb",
+			storageBucket: "fir-f078c.appspot.com",
+			messagingSenderId: "693025710131",
+			appId: "1:693025710131:web:22157824556b41fe5b0346"
+		};
+		firebase.initializeApp(firebaseConfig);
+		firebase.database().ref().child("patients").get().then((snapshot) => {
+			if (snapshot.exists()) {
+				for (let temp in snapshot.val()) {
+					if (snapshot.val()[temp]['doctor'] === localStorage.getItem('doctor')) {
+						let val = snapshot.val()[temp]
+						val["pid"] = temp
+						patients.push(val)
+					}
+				}
+			} else {
+				console.log("No data available");
+			}
+			let ele = document.getElementById('patientbody');
+			ele.innerHTML = patients.map((pat, index) => `<tr><td> ${index + 1}</td><td>${pat.first_name} </td><td> ${pat.gender}</td><td> ${pat.patient_id} </td><td> ${pat.age}</td><td> ${pat.disease} </td><td id="addbutton"><button onClick="addDisease(event,'${pat.pid}')">ADD</button></td></tr>`).join("\n")
+		}).catch((error) => {
+			console.error(error);
+		});
+	</script>
+
+</body>
+
+</html>

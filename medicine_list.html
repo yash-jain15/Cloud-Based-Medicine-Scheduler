@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Patient's Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style1.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <nav>
+        <div class="headings">
+            <h4>Nofi</h4>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#"><i class="fa fa-fw fa-user"></i><span id="patientname"></span></a></li>
+            <a href="dashboard.html">
+                <li style="color: red; cursor: pointer;">Logout</li>
+            </a>
+        </ul>
+    </nav>
+    <div class="header">
+        <h2>Medicine List</h2>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th> No: </th>
+                <th> Medicine: </th>
+                <th> Repeat </th>
+                <th>Time1: </th>
+                <th> Time2: </th>
+            </tr>
+        </thead>
+        <tbody id="medicinelistbody">
+        </tbody>
+    </table>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+    <script>
+        let patients = []
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwvn5bRi79GE2PZTtAUF9mVzolMSO1XuY",
+            authDomain: "fir-f078c.firebaseapp.com",
+            databaseURL: "https://fir-f078c-default-rtdb.firebaseio.com",
+            projectId: "fir-f078c-default-rtdb",
+            storageBucket: "fir-f078c.appspot.com",
+            messagingSenderId: "693025710131",
+            appId: "1:693025710131:web:22157824556b41fe5b0346"
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.database().ref().child("patients").get().then((snapshot) => {
+            if (snapshot.exists()) {
+                for (let temp in snapshot.val()) {
+                    if(temp==localStorage.getItem("pid")){
+                        document.getElementById('patientname').innerHTML=snapshot.val()[temp]["first_name"]
+                        break
+                    }
+                }
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+
+        firebase.database().ref().child("patients/" + localStorage.getItem('pid') + "/medicine").get().then((snapshot) => {
+            if (snapshot.exists()) {
+                for (let temp in snapshot.val()) {
+                    patients.push(snapshot.val()[temp])
+                }
+            } else {
+                window.location.href = "./patient_login.html";
+                console.log("No data available");
+            }
+            let ele = document.getElementById('medicinelistbody');
+            ele.innerHTML = patients.map((pat, index) => `<tr>
+                <td> ${index + 1} </td><td> ${pat.medicine} </td><td> ${pat.repeat}</td><td>${pat.time1}</td><td>${pat.time2}</td> </tr>`).join("\n")
+        }).catch((error) => {
+            console.error(error);
+        });
+    </script>
+
+</body>
+
+</html>
